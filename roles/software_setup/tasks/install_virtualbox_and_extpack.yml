@@ -1,0 +1,209 @@
+---
+- name: Add Apt signing keys
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: /etc/apt/trusted.gpg.d/
+    force: true
+    mode: '0644'
+  loop:
+    - "https://www.virtualbox.org/download/oracle_vbox_2016.asc"
+    - "https://www.virtualbox.org/download/oracle_vbox.asc"
+  tags:
+    - virtualbox
+
+- name: Add virtualbox repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib
+    state: present
+    filename: virtualbox
+  tags:
+    - virtualbox
+
+- name: Install VirtualBox
+  ansible.builtin.apt:
+    name: "virtualbox-7.0"
+    state: present
+    update_cache: true
+  tags:
+    - virtualbox
+
+- name: Get VirtualBox version
+  ansible.builtin.command: vboxmanage --version
+  register: vbox_version
+  changed_when: vbox_version != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - virtualbox
+
+- name: Set facts about virtualbox version part 1 # From https://github.com/don-rumata/ansible-role-install-virtualbox
+  block:
+    - name: Virtualbox available version fact
+      ansible.builtin.set_fact:
+        vb_versionfact: "{{ vbox_version.stdout | trim }}"
+      tags:
+        - virtualbox
+    - name: Virtualbox available major version fact
+      ansible.builtin.set_fact:
+        virtualbox_installed_version_fact: "{{ vb_versionfact.split('r', 2)[:1] | join('.') }}"
+      tags:
+        - virtualbox
+
+# https://stackoverflow.com/q/57837867
+- name: Get facts about installed Extension Pack
+  ansible.builtin.shell: VBoxManage list extpacks | sed 's/^/  / ; s/  Extension/- Extension/'
+  register: vboxmanage_list_extpacks_linux
+  changed_when: vboxmanage_list_extpacks_linux != 0
+  tags:
+    - virtualbox
+
+- name: Set facts about Extension Pack
+  vars:
+    plugobj:
+      plugkey: plugvalue
+  ansible.builtin.set_fact:
+    virtualbox_installed_extpack_info_linux_fact:
+      "{{ vboxmanage_list_extpacks_linux.stdout
+      | from_yaml
+      | default(plugobj) }}"
+    virtualbox_installed_extpack_info_windows_fact:
+      "{{ vboxmanage_list_extpacks_windows.stdout
+      | from_yaml
+      | default(plugobj) }}"
+  tags:
+    - virtualbox
+- name: Set fact about installed extpack
+  ansible.builtin.set_fact:
+    virtualbox_installed_extpack_info_fact:
+      "{{ virtualbox_installed_extpack_info_windows_fact
+      | combine(virtualbox_installed_extpack_info_linux_fact) }}"
+  tags:
+    - virtualbox
+
+- name: Get VirtualBox available version
+  ansible.builtin.uri:
+    url: "{{ virtualbox_url_version }}"
+    return_content: true
+  delegate_to: localhost
+  register: virtualbox_available_version
+  tags:
+    - virtualbox
+
+- name: Set facts about available virtualbox version part 1
+  block:
+    - name: Set virtualbox_available_version_fact
+      ansible.builtin.set_fact:
+        virtualbox_available_version_fact: "{{ virtualbox_available_version.content | trim }}"
+      tags:
+        - virtualbox
+
+    - name: Set virtualbox_available_major_and_minor_version_fact
+      ansible.builtin.set_fact:
+        virtualbox_available_major_and_minor_version_fact: "{{ virtualbox_available_version_fact.split('.', 2)[:-1] | join('.') }}"
+      tags:
+        - virtualbox
+
+- name: Continue settings facts for virtual box extpacks
+  ansible.builtin.set_fact:
+    virtualbox_full_installed_extpack_version_fact: "{{ virtualbox_installed_extpack_info_fact['Version'] }}.{{ virtualbox_installed_extpack_info_fact['Revision'] }}"
+  when: virtualbox_installed_extpack_info_fact['Extension Packs'] != 0
+  tags:
+    - virtualbox
+
+- name: Get VirtualBox checksum content
+  ansible.builtin.uri:
+    url: "{{ virtualbox_checksum_file_url }}"
+    return_content: true
+  register: virtualbox_checksum_file_content
+  delegate_to: localhost
+  tags:
+    - virtualbox
+
+- name: Set facts about about extpack download url
+  vars:
+    virtualbox_extpack_direct_download_url_var: "{{ virtualbox_url_path_to_files + '/' + virtualbox_available_extpack_filename_fact }}"
+  block:
+    - name: Set facts about available virtualbox version part 2
+      ansible.builtin.set_fact:
+        virtualbox_available_extpack_filename_fact:
+          '{{ (virtualbox_checksum_file_content.content
+          | regex_findall(".*vbox-extpack"))[0].split("*")[1] }}'
+      tags:
+        - virtualbox
+
+    - name: Set fact available extpack filename checksum
+      ansible.builtin.set_fact:
+        virtualbox_available_extpack_checksum_fact:
+          '{{ (virtualbox_checksum_file_content.content
+          | regex_findall(".*vbox-extpack"))[0].split("*")[0] | trim }}'
+      tags:
+        - virtualbox
+
+    - name: Set fact virtualbox_available_private_version_fact
+      ansible.builtin.set_fact:
+        virtualbox_available_private_version_fact: '{{ virtualbox_available_extpack_filename_fact.split("-")[2].split(".")[0] }}'
+      tags:
+        - virtualbox
+
+    - name: Set fact virtualbox_full_available_version_fact
+      ansible.builtin.set_fact:
+        virtualbox_full_available_version_fact: "{{ virtualbox_available_version_fact }}.{{ virtualbox_available_private_version_fact }}"
+      tags:
+        - virtualbox
+    - name: Set fact virtualbox_full_available_extpack_version_fact
+      ansible.builtin.set_fact:
+        virtualbox_full_available_extpack_version_fact: "{{ virtualbox_full_available_version_fact }}"
+      tags:
+        - virtualbox
+
+    - name: Set fact available extpack download direct link
+      ansible.builtin.set_fact:
+        virtualbox_extpack_direct_download_url_fact:
+          "{{ virtualbox_extpack_direct_download_url
+          | default(virtualbox_extpack_direct_download_url_var) }}"
+      tags:
+        - virtualbox
+
+- name: Debug message
+  ansible.builtin.debug:
+    msg: "{{ virtualbox_installed_extpack_info_fact }}"
+  tags:
+    - virtualbox
+
+- name: Download VirtualBox Extension Pack
+  when: virtualbox_installed_extpack_info_fact['Extension Packs'] == 0
+    or
+    virtualbox_full_installed_extpack_version_fact != virtualbox_full_available_extpack_version_fact
+  ansible.builtin.get_url:
+    url: "{{ virtualbox_extpack_direct_download_url_fact }}"
+    dest: "/tmp/{{ virtualbox_available_extpack_filename_fact }}"
+    checksum: "{{ virtualbox_checksum_algorithm }}:{{ virtualbox_available_extpack_checksum_fact }}"
+    mode: '0666'
+  tags:
+    - virtualbox
+
+- name: Install\Update VirtualBox Extension Pack
+  when:
+    - virtualbox_installed_extpack_info_fact['Extension Packs'] == 0
+      or
+      virtualbox_full_installed_extpack_version_fact != virtualbox_full_available_extpack_version_fact
+  become: true
+  block:
+    - name: Install extpack
+      ansible.builtin.shell: yes | VBoxManage extpack install --replace /tmp/{{ virtualbox_available_extpack_filename_fact }}
+      register: my_output # <-Registers the command output.
+      changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+      tags:
+        - virtualbox
+
+    - name: Delete downloaded file
+      ansible.builtin.file:
+        path: "/tmp/{{ virtualbox_available_extpack_filename_fact }}"
+        state: absent
+      tags:
+        - virtualbox
+
+- name: Add cableman to vboxusers group
+  ansible.builtin.command: usermod -a -G vboxusers cableman
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - virtualbox

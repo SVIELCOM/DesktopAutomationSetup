@@ -1,0 +1,11 @@
+---
+- name: Starting
+  hosts: all
+  gather_facts: true
+  become: true
+#  become_user: root
+  roles:
+    - { role: hardware_setup, tags: ["hardware"] }
+    - { role: software_setup, tags: ["software"] }
+    - { role: system_setup, tags: ["system"] }
+    - { role: themes_setup, tags: ["themes"] }

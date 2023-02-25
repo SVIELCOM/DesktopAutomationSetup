@@ -1,0 +1,10 @@
+{
+	"font_size": 12,
+	"color_scheme": "Packages/Neon Color Scheme/Neon.sublime-color-scheme",
+	"dictionary": "Dictionaries/ru_RU.dic",
+	"theme": "Default Dark.sublime-theme",
+	"ignored_packages":
+	[
+		"Vintage",
+	],
+}

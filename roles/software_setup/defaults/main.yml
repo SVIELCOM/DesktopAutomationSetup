@@ -1,0 +1,11 @@
+---
+# defaults file for software_setup
+virtualbox_edition: latest-stable
+virtualbox_checksum_algorithm: sha256
+virtualbox_url_prefix: "https://download.virtualbox.org/virtualbox"
+virtualbox_url_path_to_files: "{{ virtualbox_url_prefix }}/{{ virtualbox_installed_version_fact }}"
+virtualbox_checksum_file_url: "{{ virtualbox_url_path_to_files }}/{{ virtualbox_checksum_algorithm | upper }}SUMS"
+virtualbox_url_version: "{{ virtualbox_url_prefix }}/{{ virtualbox_edition | upper }}.TXT"
+
+duf_version: "0.8.1"
+duf_download_url: "https://github.com/muesli/duf/releases/download/v{{duf_version}}/duf_{{duf_version}}_linux_amd64.deb"

@@ -1,0 +1,6 @@
+skip_list:
+  # - fqcn[action-core]
+  - risky-shell-pipe
+  - latest[git]
+  - yaml[line-length]
+  - yaml[comments]

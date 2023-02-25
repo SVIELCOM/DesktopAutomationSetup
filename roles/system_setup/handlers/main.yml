@@ -1,0 +1,6 @@
+---
+# handlers file for system_setup
+- name: Bluetooth_restart
+  ansible.builtin.service:
+    name: bluetooth
+    state: restarted

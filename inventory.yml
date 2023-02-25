@@ -1,0 +1,5 @@
+all:
+  hosts:
+    target:
+      ansible_host: 10.3.255.65
+      ansible_user: cableman

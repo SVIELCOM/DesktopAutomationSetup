@@ -1,0 +1,217 @@
+---
+# tasks file for themes_setup
+- name: Create some directory
+  ansible.builtin.file:
+    path: /home/cableman/{{ item }}
+    owner: cableman
+    group: cableman
+    state: directory
+    mode: '0775'
+  with_items:
+    - '.icons/'
+    - '.themes'
+  tags:
+    - themes
+    - icons
+
+- name: Download candy-icons zip from GitHub
+  ansible.builtin.get_url:
+    url: https://github.com/EliverLara/candy-icons/archive/refs/heads/master.zip
+    dest: /tmp
+    mode: '0666'
+  register: zip_files
+  tags:
+    - icons
+
+# - name: Print variable
+#   ansible.builtin.debug:
+#     var: zip_files
+
+- name: Unzip files
+  ansible.builtin.unarchive:
+    src: "{{ zip_files.dest }}"
+    dest: /home/cableman/.icons/
+    copy: false
+    owner: cableman
+    group: cableman
+    list_files: true
+    mode: '0777'
+  tags:
+    - icons
+
+- name: Delete zip file
+  ansible.builtin.file:
+    path: "{{ zip_files.dest }}"
+    state: absent
+
+- name: Ensure candy-icons directory is absent
+  ansible.builtin.file:
+    path: /home/cableman/.icons/candy-icons
+    state: absent
+    force: true
+  tags:
+    - icons
+
+- name: Rename directory candy-icons
+  ansible.builtin.command:
+    mv /home/cableman/.icons/candy-icons-master /home/cableman/.icons/candy-icons
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - icons
+
+- name: Copy wallpapers jpg
+  ansible.builtin.copy:
+    src: wallpapers
+    dest: /home/cableman/
+    mode: '0664'
+    owner: cableman
+    group: cableman
+  tags:
+    - wallpapers
+
+- name: Copy xfce desktop conf file
+  ansible.builtin.copy:
+    src: xfce4-desktop.xml
+    dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
+    owner: cableman
+    group: cableman
+    mode: '0664'
+    force: true
+  when: ansible_nodename == "vlad"
+  tags:
+    - wallpapers
+
+- name: Ensure directory /tmp/xfce-simple-dark is not exists
+  ansible.builtin.file:
+    path: /tmp/xfce-simple-dark
+    state: absent
+    force: true
+
+- name: Clone Xfce-Simple-Dark github repo
+  ansible.builtin.git:
+    repo: 'https://github.com/simonkrauter/Xfce-Simple-Dark.git'
+    dest: /tmp/xfce-simple-dark
+    force: true
+    version: HEAD
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Move Xfce-Simple-Dark directories to .themes
+  ansible.builtin.command:
+    cp -Rf /tmp/xfce-simple-dark/Xfce-Simple-Dark_{{ item }} /home/cableman/.themes
+  with_items:
+    - 'widgets'
+    - 'xfwm_x24'
+    - 'xfwm_x28'
+    - 'xfwm_x32'
+    - 'xfwm_x36'
+    - 'xfwm_x40'
+    - 'xfwm_x44'
+    - 'xfwm_x48'
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Change the owner and group of copied files
+  ansible.builtin.file:
+    path: /home/cableman/.themes
+    owner: cableman
+    group: cableman
+    recurse: true
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Ensure /home/cableman/.config/geany/colorschemes is exists
+  ansible.builtin.file:
+    path: /home/cableman/.config/geany/colorschemes
+    state: directory
+    owner: cableman
+    group: cableman
+    mode: '0775'
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Copy the file geany/simple-dark.conf to ~/.config/geany/colorschemes/
+  ansible.builtin.copy:
+    remote_src: true
+    src: /tmp/xfce-simple-dark/geany/simple-dark.conf
+    dest: /home/cableman/.config/geany/colorschemes/
+    owner: cableman
+    group: cableman
+    mode: '0664'
+    force: true
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Delete /tmp/xfce-simple-dark
+  ansible.builtin.file:
+    path: /tmp/xfce-simple-dark
+    state: absent
+  tags:
+    - themes
+    - xfce-simple-dark
+
+- name: Copy Plasma tar-file
+  ansible.builtin.copy:
+    src: plasma-themes-march2021-v4-4.tar.xz
+    dest: /tmp
+    owner: cableman
+    group: cableman
+    mode: '0664'
+  tags:
+    - themes
+    - plasma
+
+- name: Unarchive Plasma
+  ansible.builtin.unarchive:
+    src: /tmp/plasma-themes-march2021-v4-4.tar.xz
+    dest: /tmp/
+    copy: false
+    list_files: true
+    owner: cableman
+    group: cableman
+  tags:
+    - themes
+    - plasma
+
+- name: Copy files of Plasma theme to ~/.theme
+  ansible.builtin.command:
+    cp -a /tmp/plasma-themes-march2021-v4-4/{{ item }} /home/cableman/.themes/
+  with_items:
+    - 'Plasma\ Aurora'
+    - 'Plasma\ Aurora\ Plus'
+    - 'Plasma\ Bolt'
+    - 'Plasma\ Bolt\ Plus'
+    - 'Plasma\ Fire'
+    - 'Plasma\ Fire\ Plus'
+    - 'plasma-themes-NO-BACKDROP'
+    - 'Plasma\ Ultra'
+    - 'Plasma\ Ultra\ Plus'
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - themes
+    - plasma
+
+- name: Delete Plasma archive
+  ansible.builtin.file:
+    path: /tmp/plasma-themes-march2021-v4-4.tar.xz
+    state: absent
+  tags:
+    - themes
+    - plasma
+
+- name: Delete temp Plasma directory
+  ansible.builtin.file:
+    path: /tmp/plasma-themes-march2021-v4-4
+    state: absent
+  tags:
+    - themes
+    - plasma

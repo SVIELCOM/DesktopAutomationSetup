@@ -9,3 +9,6 @@ virtualbox_url_version: "{{ virtualbox_url_prefix }}/{{ virtualbox_edition | upp
 
 duf_version: "0.8.1"
 duf_download_url: "https://github.com/muesli/duf/releases/download/v{{duf_version}}/duf_{{duf_version}}_linux_amd64.deb"
+
+atari800_version: "5.0.0"
+atari800_download_url: "https://github.com/atari800/atari800/releases/download/ATARI800_5_0_0/atari800_5.0.0_amd64.deb"

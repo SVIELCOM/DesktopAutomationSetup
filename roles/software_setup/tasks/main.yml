@@ -150,6 +150,14 @@
       - "docker-ce"
       - "libreoffice"
       - "exa"
+      - "xsane"
+      - "vim"
+      - "transmission"
+      - "putty"
+      - "minicom"
+      - "solaar"
+      - "7zip"
+
   tags:
     - packages
 
@@ -420,22 +428,34 @@
     force: false
   register: atari800_file
   tags:
-    - "atari"
+    - atari
 
 - name: Install Atari800
   ansible.builtin.apt:
     deb: "{{ atari800_file['dest'] }}"
   tags:
-    - "atari"
+    - atari
 
 - name: Sync Atari800 directory
+  ansible.posix.synchronize:
+    src: /home/cableman/Atari
+    dest: /home/cableman/
+  become: false
+  tags:
+    - atari
+
+- name: Copy Atari800 config
+  ansible.posix.synchronize:
+    src: /home/cableman/.atari800.cfg
+    dest: /home/cableman/.atari800.cfg
+  become: false
+  tags:
+    - atari
 # TODO copy ansible linter config what fot?
 # TODO vscode + settings
-# atari 800
 # drweb
 # home printer
 # Document Scanner
-# xasne
 # nomacs
 # okular
 # foxit reader
@@ -445,15 +465,9 @@
 # gnome-disks
 # taskmanager
 # Calculator
-# 7-zip
 # screenshot
 # GNOME Character Map
 # Speed Crunch
-# Vim
-# Solaar
-# Transmission
-# Putty
-# minicom
 # watsapp
 # zoom
 # wireshark
@@ -463,4 +477,3 @@
 # STM32 Cube IDE
 # arduino IDE
 # htop
-

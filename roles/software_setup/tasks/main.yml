@@ -192,6 +192,7 @@
       - "gnome-screenshot"
       - "nomacs"
       - "simple-scan"
+      - "speedcrunch"
 
   tags:
     - packages
@@ -498,27 +499,33 @@
 
 - name: Get zoom deb package
   ansible.builtin.get_url:
-    url: https://zoom.us/client/latest/zoom_amd64.deb
+    url: "{{ zoom_download_url }}"
     dest: /tmp
     mode: "0644"
     force: false
   register: zoom_deb_file
-  when: not zoom_file_stat.exists
+  when: not zoom_file_stat.stat.exists
   tags:
     - zoom
 
 - name: Install zoom
   ansible.builtin.apt:
     deb: "{{ zoom_deb_file['dest'] }}"
+  when: not zoom_file_stat.stat.exists
   tags:
     - zoom
+
+- name: Install Whatsapp
+  community.general.snap:
+    name:
+      - whatsapp-for-linux
+  tags:
+    - whatsapp
 # TODO copy ansible linter config what fot?
 # transfer Kicad config and libraries
 # TODO vscode + settings
 # drweb
 # home printer
-# Speed Crunch
-# watsapp
 # wps office
 # yEd Graph editor
 # STM32 Cube IDE

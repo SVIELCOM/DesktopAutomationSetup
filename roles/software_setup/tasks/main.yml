@@ -11,6 +11,7 @@
   ansible.builtin.apt_repository:
     repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
     state: present
+    update_cache: false
     filename: google-chrome
 
 - name: Add signing Hashicorp key
@@ -24,6 +25,7 @@
   ansible.builtin.apt_repository:
     repo: deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
     state: present
+    update_cache: false
     filename: hashicorp
 
 - name: Add Helm signing key
@@ -38,6 +40,7 @@
     repo: deb [arch=amd64] https://baltocdn.com/helm/stable/debian/ all main
     state: present
     filename: helm-stable-debian
+    update_cache: false
 
 - name: Get sublimetext repo key
   ansible.builtin.get_url:
@@ -53,6 +56,7 @@
     repo: deb [arch=amd64] https://download.sublimetext.com/ apt/stable/
     state: present
     filename: sublime-text
+    update_cache: false
   tags:
     - sublimetext
 
@@ -60,6 +64,7 @@
   ansible.builtin.apt_repository:
     repo: ppa:unit193/encryption
     state: present
+    update_cache: false
   tags:
     - veracrypt
 
@@ -92,6 +97,7 @@
     repo: deb [arch=amd64] http://deb.anydesk.com/ all main
     state: present
     filename: anydesk-stable
+    update_cache: false
   tags:
     - anydesk
 
@@ -109,8 +115,25 @@
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
     filename: docker
+    update_cache: false
   tags:
     - docker
+
+- name: Add Kicad repository into source list
+  ansible.builtin.apt_repository:
+    repo: ppa:kicad/kicad-7.0-releases
+    update_cache: false
+    state: present
+  tags:
+    - "kicad"
+
+- name: Add wireshark repository into source list
+  ansible.builtin.apt_repository:
+    repo: ppa:wireshark-dev/stable
+    update_cache: false
+    state: present
+  tags:
+    - "wireshark"
 
 - name: Install packages
   ansible.builtin.apt:
@@ -157,6 +180,18 @@
       - "minicom"
       - "solaar"
       - "7zip"
+      - "htop"
+      - " kicad"
+      - "wireshark"
+      - "okular"
+      - "pinta"
+      - "ristretto"
+      - "gtkhash"
+      - "gnome-disk-utility"
+      - "gnome-calculator"
+      - "gnome-screenshot"
+      - "nomacs"
+      - "simple-scan"
 
   tags:
     - packages
@@ -420,6 +455,8 @@
   tags:
     - docker
 
+# TODO get Atari800 version and write conditions
+
 - name: Get Atari800 deb-file
   ansible.builtin.get_url:
     url: "{{ atari800_download_url }}"
@@ -451,29 +488,46 @@
   become: false
   tags:
     - atari
+
+- name: Check if zoom exists
+  ansible.builtin.stat:
+    path: /usr/bin/zoom
+  register: zoom_file_stat
+  tags:
+    - zoom
+
+- name: Get zoom deb package
+  ansible.builtin.get_url:
+    url: https://zoom.us/client/latest/zoom_amd64.deb
+    dest: /tmp
+    mode: "0644"
+    force: false
+  register: zoom_deb_file
+  when: not zoom_file_stat.exists
+  tags:
+    - zoom
+
+- name: Install zoom
+  ansible.builtin.apt:
+    deb: "{{ zoom_deb_file['dest'] }}"
+  tags:
+    - zoom
 # TODO copy ansible linter config what fot?
+# transfer Kicad config and libraries
 # TODO vscode + settings
 # drweb
 # home printer
-# Document Scanner
-# nomacs
-# okular
-# foxit reader
-# pinta
-# Ristretto is an image viewer for the Xfce desktop environment
-# gtk hash
-# gnome-disks
-# taskmanager
-# Calculator
-# screenshot
-# GNOME Character Map
 # Speed Crunch
 # watsapp
-# zoom
-# wireshark
 # wps office
-# Kicad
 # yEd Graph editor
 # STM32 Cube IDE
 # arduino IDE
-# htop
+
+# foxit reader - needs manual installation
+# - name: Download foxit reader
+#   ansible.builtin.command: wget -O /tmp/foxit.tar.gz https://www.foxit.com/downloads/latest.html\?product\=Foxit-Reader\&platform\=Linux-64-bit\&version\=\&package_type\=\&language\=English\&distID\=
+#   register: my_output # <-Registers the command output.
+#   changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+#   tags:
+#     - "foxit"

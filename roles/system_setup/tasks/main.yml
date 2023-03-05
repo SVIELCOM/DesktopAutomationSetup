@@ -54,15 +54,15 @@
     force: true
     backup: true
   with_items:
-    - 'keyboards.xml'
-    - 'keyboard-layout.xml'
-    - 'thunar-volman.xml'
-    - 'thunar.xml'
-    - 'xfce4-keyboard-shortcuts.xml'
-    - 'xfce4-panel.xml'
-    - 'xfce4-taskmanager.xml'
-    - 'xfwm4.xml'
-    - 'xsettings.xml'
+    - "keyboards.xml"
+    - "keyboard-layout.xml"
+    - "thunar-volman.xml"
+    - "thunar.xml"
+    - "xfce4-keyboard-shortcuts.xml"
+    - "xfce4-panel.xml"
+    - "xfce4-taskmanager.xml"
+    - "xfwm4.xml"
+    - "xsettings.xml"
   when: xfce_conf_dir_exists.stat.exists
 
 - name: Copy .bashrc and zshrc
@@ -74,10 +74,10 @@
     mode: "0644"
     force: true
   with_items:
-    - '.bashrc'
-    - '.bash_aliases'
-    - '.zshrc'
-    - '.p10k.zsh'
+    - ".bashrc"
+    - ".bash_aliases"
+    - ".zshrc"
+    - ".p10k.zsh"
 
 - name: Ensure ZSH set as default shell
   ansible.builtin.user:
@@ -85,7 +85,7 @@
     shell: /usr/bin/zsh
     state: present
   tags:
-    - 'zsh'
+    - "zsh"
 
 - name: Copy ohmyzsh.sh
   ansible.builtin.copy:
@@ -107,7 +107,7 @@
 - name: Edit /etc/bluetooth/input.conf for IdleTimeout=0
   ansible.builtin.lineinfile:
     path: /etc/bluetooth/input.conf
-    regexp: 'IdleTimeout='
+    regexp: "IdleTimeout="
     line: IdleTimeout=0
     mode: "0644"
     create: false
@@ -116,7 +116,7 @@
 - name: Edit /etc/bluetooth/main.conf for FastConnectable=true
   ansible.builtin.lineinfile:
     path: /etc/bluetooth/main.conf
-    regexp: 'FastConnectable ='
+    regexp: "FastConnectable ="
     line: FastConnectable = true
     mode: "0644"
     create: false
@@ -135,11 +135,88 @@
     line: "{{ item.line }}"
     create: false
   loop:
-    - { regexp: 'APT::Periodic::Update-Package-Lists', line: 'APT::Periodic::Update-Package-Lists "0";' }
-    - { regexp: 'APT::Periodic::Unattended-Upgrade', line: 'APT::Periodic::Unattended-Upgrade "0";' }
+    - {
+        regexp: "APT::Periodic::Update-Package-Lists",
+        line: 'APT::Periodic::Update-Package-Lists "0";',
+      }
+    - {
+        regexp: "APT::Periodic::Unattended-Upgrade",
+        line: 'APT::Periodic::Unattended-Upgrade "0";',
+      }
   tags:
     - auto_upgrades
 
+- name: Copy kill_vlc_on_resume.service
+  ansible.builtin.copy:
+    src: kill_vlc_on_resume.service
+    dest: /etc/systemd/system/
+    mode: "0644"
+    force: false
+  tags:
+    - kill_vlc
+
+- name: Enable service kill_vlc_on_resume
+  ansible.builtin.service:
+    name: kill_vlc_on_resume
+    enabled: true
+  tags:
+    - kill_vlc
+
+- name: Creating CUPS tmp location {{ cups_tmp_location }}
+  ansible.builtin.file:
+    path: "{{ cups_tmp_location }}"
+    recurse: true
+    state: directory
+  tags:
+    - printer
+
+- name: Copy hp-plugin-install.exp install script #this from https://github.com/HP41/ansible-cups/blob/master/tasks/ppd_hp.yml
+  ansible.builtin.copy:
+    src: files/hp-plugin-install.exp
+    dest: "{{ cups_tmp_location }}/hp-plugin-install.exp"
+    force: true
+    mode: a+rx
+  tags:
+    - printer
+
+- name: Installing HP Plugin using an except script to avoid user interaction
+  ansible.builtin.command: "{{ cups_tmp_location }}/hp-plugin-install.exp"
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - printer
+
+- name: Remove hp-plugin-install.exp install script
+  ansible.builtin.file:
+    path: "{{ cups_tmp_location }}/hp-plugin-install.exp"
+    state: absent
+  tags:
+    - printer
+
+- name: Ensure user added to group
+  ansible.builtin.user:
+    name: cableman
+    groups:
+      - lpadmin
+    append: true
+  tags:
+    - printer
+
+- name: Add printer
+  ansible.builtin.command: "lpadmin -p {{ printer_name }} -E -v ipp://{{ printer_ip }}/ipp/print -m everywhere"
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - printer
+
+- name: Prevent huge size of xsession-errors file
+  ansible.builtin.lineinfile:
+    path: /etc/X11/Xsession
+    regexp: "^ERRFILE="
+    line: "ERRFILE=/dev/null"
+    create: false
+  tags:
+    - xsession
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
 # просмотреть и применить все заметки  Linux Install

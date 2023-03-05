@@ -1,2 +1,5 @@
 ---
 # defaults file for system_setup
+cups_tmp_location: "/home/cableman/cups-ansible"
+printer_ip: "10.3.255.91"
+printer_name: "Home_LaserJet"

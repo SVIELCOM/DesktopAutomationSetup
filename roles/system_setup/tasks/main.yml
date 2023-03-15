@@ -217,6 +217,15 @@
     create: false
   tags:
     - xsession
+
+- name: Copy desktop file for add middle mouse button
+  ansible.builtin.copy:
+    src: middle_mouse_button.desktop
+    dest: /home/cableman/.config/autostart
+    mode: "0600"
+    owner: cableman
+  tags:
+    - mbutton
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
 # просмотреть и применить все заметки  Linux Install

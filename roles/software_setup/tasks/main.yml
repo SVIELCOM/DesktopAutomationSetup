@@ -215,6 +215,10 @@
       - "hplip"
       - "expect"
       - "python-is-python3"
+      - "xfsprogs"
+      - "btrfs-progs"
+      - "f2fs-tools"
+      - "exfatprogs"
 
   tags:
     - packages
@@ -559,3 +563,5 @@
 #   changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
 #   tags:
 #     - "foxit"
+
+# проверить, куда складывает свои файлы zsh       export ZSH_COMPDUMP=$HOME/.cache/.zcompdump-$HOST

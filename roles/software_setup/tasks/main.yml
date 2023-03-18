@@ -153,6 +153,24 @@
   tags:
     - drweb
 
+- name: Add microsoft key for vscode
+  ansible.builtin.get_url:
+    url: "https://packages.microsoft.com/keys/microsoft.asc"
+    dest: /etc/apt/trusted.gpg.d/microsoft.asc
+    force: false
+    mode: "0644"
+  tags:
+    - vscode
+
+- name: Add vscode repository into source list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    update_cache: false
+    filename: vscode
+    state: present
+  tags:
+    - vscode
+
 - name: Install packages
   ansible.builtin.apt:
     name: "{{ packages }}"
@@ -197,9 +215,10 @@
       - "putty"
       - "minicom"
       - "solaar"
-      - "7zip"
+      - "p7zip-full"
+      - "p7zip-rar"
       - "htop"
-      - " kicad"
+      - "kicad"
       - "wireshark"
       - "okular"
       - "pinta"
@@ -219,7 +238,7 @@
       - "btrfs-progs"
       - "f2fs-tools"
       - "exfatprogs"
-
+      - "code" # Install VS Code
   tags:
     - packages
 
@@ -547,14 +566,14 @@
       - whatsapp-for-linux
   tags:
     - whatsapp
-# TODO copy ansible linter config what fot?
-# transfer Kicad config and libraries
+# TODO copy ansible linter config what for?
+# TODO transfer Kicad config and libraries
 # TODO vscode + settings
-# home printer
+
 # yEd Graph editor
-# STM32 Cube IDE
 # arduino IDE
 
+# STM32 Cube IDE - needs manual installation
 # wps office - needs manual installation
 # foxit reader - needs manual installation
 # - name: Download foxit reader

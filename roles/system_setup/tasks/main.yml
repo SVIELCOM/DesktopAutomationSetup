@@ -229,3 +229,4 @@
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
 # просмотреть и применить все заметки  Linux Install
+# скопировать с установленной машины свойства загрузчика

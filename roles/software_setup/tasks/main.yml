@@ -204,7 +204,6 @@
       - "surfshark-vpn"
       - "anydesk"
       - "krusader"
-      - "telegram-desktop"
       - "ca-certificates"
       - "docker-ce"
       - "libreoffice"
@@ -239,6 +238,7 @@
       - "f2fs-tools"
       - "exfatprogs"
       - "code" # Install VS Code
+      - "thunderbird"
   tags:
     - packages
 

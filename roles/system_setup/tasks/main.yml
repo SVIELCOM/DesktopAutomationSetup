@@ -87,16 +87,16 @@
   tags:
     - "zsh"
 
-- name: Copy ohmyzsh.sh
-  ansible.builtin.copy:
-    src: oh-my-zsh.sh
-    dest: /home/cableman/.oh-my-zsh/
-    owner: cableman
-    group: cableman
-    mode: "0644"
-    force: true
-  tags:
-    - zsh
+# - name: Copy ohmyzsh.sh
+#   ansible.builtin.copy:
+#     src: oh-my-zsh.sh
+#     dest: /home/cableman/.oh-my-zsh/
+#     owner: cableman
+#     group: cableman
+#     mode: "0644"
+#     force: true
+#   tags:
+#     - zsh
 
 - name: Delete file for disable help information on welcome ssh console
   ansible.builtin.file:

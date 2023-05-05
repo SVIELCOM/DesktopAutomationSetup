@@ -4,7 +4,7 @@
     path: /etc/sysctl.conf
     line: net.ipv4.ip_default_ttl=65
     create: false
-
+  tags: "ttl"
 # tasks file for system_setup
 # Мозг себе взорвал, пока разобрался с json_query. Главное - следить за тем, какой тип данных скармливать следующему оператору
 # https://jmespath.org/tutorial.html

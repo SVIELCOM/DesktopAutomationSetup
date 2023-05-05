@@ -1,5 +1,13 @@
 ---
 # tasks file for software_setup
+- name: Remove snap
+  ansible.builtin.apt:
+    name: "snap"
+    state: absent
+    update_cache: false
+  tags:
+    - "snap"
+
 - name: Add signing Google key
   ansible.builtin.get_url:
     url: "https://dl.google.com/linux/linux_signing_key.pub"
@@ -560,12 +568,23 @@
   tags:
     - zoom
 
-- name: Install Whatsapp
-  community.general.snap:
-    name:
-      - whatsapp-for-linux
+# - name: Install Whatsapp
+#   community.general.snap:
+#     name:
+#       - whatsapp-for-linux
+#   tags:
+#     - whatsapp
+
+- name: Copy telegram archive
+  ansible.builtin.copy:
+    src: tsetup.4.8.1.tar.xz
+    dest: /tmp
+    owner: root
+    mode: "0666"
+    force: false
   tags:
-    - whatsapp
+    - "telegram"
+    
 # TODO copy ansible linter config what for?
 # TODO transfer Kicad config and libraries
 # TODO vscode + settings

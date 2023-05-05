@@ -1,10 +1,16 @@
 ---
+- name: Set permanent TTL
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    line: net.ipv4.ip_default_ttl=65
+    create: false
+
 # tasks file for system_setup
 # Мозг себе взорвал, пока разобрался с json_query. Главное - следить за тем, какой тип данных скармливать следующему оператору
 # https://jmespath.org/tutorial.html
 # https://jmespath.org/specification.html#function-evaluation
 # pip3 install jmespath-terminal далее - jpterm
-- name: Hide pool's name from Thunar panel
+- name: Hide ZFS pool's name from Thunar panel
   ansible.builtin.set_fact:
     devices_uuid: "{{ ansible_devices | json_query(jmesquery) }}"
   vars:

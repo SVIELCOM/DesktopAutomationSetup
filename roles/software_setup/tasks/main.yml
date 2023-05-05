@@ -584,7 +584,7 @@
     force: false
   tags:
     - "telegram"
-    
+
 # TODO copy ansible linter config what for?
 # TODO transfer Kicad config and libraries
 # TODO vscode + settings

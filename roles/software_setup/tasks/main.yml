@@ -581,22 +581,26 @@
   tags:
     - zoom
 
-# - name: Install Whatsapp
-#   community.general.snap:
-#     name:
-#       - whatsapp-for-linux
-#   tags:
-#     - whatsapp
-
-- name: Copy telegram archive
-  ansible.builtin.copy:
-    src: tsetup.4.8.1.tar.xz
-    dest: /tmp
-    owner: root
-    mode: "0666"
-    force: false
+- name: Add Flathub repo
+  ansible.builtin.command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
   tags:
-    - "telegram"
+    - flatpak
+
+- name: Install Watsapp
+  ansible.builtin.command: flatpak install -y flathub com.github.eneshecan.WhatsAppForLinux
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - watsapp
+
+- name: Install telegram
+  ansible.builtin.command: flatpak install -y flathub org.telegram.desktop
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - telegram
 # TODO copy ansible linter config what for?
 # TODO transfer Kicad config and libraries
 # TODO vscode + settings

@@ -183,6 +183,13 @@
   tags:
     - ansible
 
+- name: Add flatpak repository into source list
+  ansible.builtin.command: add-apt-repository --yes --no-update ppa:flatpak/stable
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - flatpak
+
 - name: Install packages
   ansible.builtin.apt:
     name: "{{ packages }}"
@@ -205,6 +212,7 @@
       - "python3"
       - "google-chrome-stable"
       - "software-properties-common"
+      - "flatpak"
       - "ansible"
       - "terraform"
       - "python3-pip"

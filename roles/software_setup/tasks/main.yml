@@ -69,10 +69,9 @@
     - sublimetext
 
 - name: Add veracrypt repository into sources list
-  ansible.builtin.apt_repository:
-    repo: ppa:unit193/encryption
-    state: present
-    update_cache: false
+  ansible.builtin.command: add-apt-repository --yes --update ppa:unit193/encryption
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
   tags:
     - veracrypt
 
@@ -128,18 +127,16 @@
     - docker
 
 - name: Add Kicad repository into source list
-  ansible.builtin.apt_repository:
-    repo: ppa:kicad/kicad-7.0-releases
-    update_cache: false
-    state: present
+  ansible.builtin.command: add-apt-repository --yes --update ppa:kicad/kicad-7.0-releases
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
   tags:
     - kicad
 
 - name: Add wireshark repository into source list
-  ansible.builtin.apt_repository:
-    repo: ppa:wireshark-dev/stable
-    update_cache: false
-    state: present
+  ansible.builtin.command: add-apt-repository --yes --update ppa:wireshark-dev/stable
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
   tags:
     - wireshark
 
@@ -584,7 +581,6 @@
     force: false
   tags:
     - "telegram"
-
 # TODO copy ansible linter config what for?
 # TODO transfer Kicad config and libraries
 # TODO vscode + settings

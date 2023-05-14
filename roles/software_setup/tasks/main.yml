@@ -625,6 +625,15 @@
   become: false
   tags:
     - kicad
+
+- name: Delete packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: absent
+    update_cache: false
+  vars:
+    packages: # TODO move packages to variable
+      - "file-roller"
 # yEd Graph editor
 # arduino IDE
 

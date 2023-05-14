@@ -201,6 +201,7 @@
       - "mc"
       - "blueman"
       - "xfce4-taskmanager"
+      - "menulibre"
       - "git"
       - "xterm"
       - "terminator"

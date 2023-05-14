@@ -603,19 +603,30 @@
     - telegram
 # TODO copy ansible linter config what for?
 # TODO transfer Kicad config and libraries
-# TODO vscode + settings
 
+- name: Synchronize thunderbird directory
+  ansible.posix.synchronize:
+    src: /home/cableman/.thunderbird
+    dest: /home/cableman/
+    delete: true
+  become: false
+  tags:
+    - thunderbird
+
+- name: Synchronize KiCAD config directory
+  ansible.posix.synchronize:
+    src: /home/cableman/.config/kicad
+    dest: /home/cableman/.config/
+    delete: true
+    checksum: true
+  become: false
+  tags:
+    - kicad
 # yEd Graph editor
 # arduino IDE
 
 # STM32 Cube IDE - needs manual installation
 # wps office - needs manual installation
 # foxit reader - needs manual installation
-# - name: Download foxit reader
-#   ansible.builtin.command: wget -O /tmp/foxit.tar.gz https://www.foxit.com/downloads/latest.html\?product\=Foxit-Reader\&platform\=Linux-64-bit\&version\=\&package_type\=\&language\=English\&distID\=
-#   register: my_output # <-Registers the command output.
-#   changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
-#   tags:
-#     - "foxit"
 
 # проверить, куда складывает свои файлы zsh       export ZSH_COMPDUMP=$HOME/.cache/.zcompdump-$HOST

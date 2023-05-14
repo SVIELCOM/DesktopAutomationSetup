@@ -238,6 +238,8 @@
       - "solaar"
       - "p7zip-full"
       - "p7zip-rar"
+      - "engrampa"
+      - "engrampa-common"
       - "htop"
       - "kicad"
       - "wireshark"

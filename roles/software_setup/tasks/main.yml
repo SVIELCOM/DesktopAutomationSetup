@@ -634,6 +634,26 @@
   vars:
     packages: # TODO move packages to variable
       - "file-roller"
+
+- name: Ensure that the directory 'Saleae Logic Analyzer' exists
+  ansible.builtin.file:
+    path: "/home/cableman/LogicAnalyzer"
+    owner: cableman
+    group: cableman
+    state: directory
+    mode: "0755"
+  tags:
+    - logicanalyzer
+
+- name: Synchronize the directory 'Saleae Logic Analizer'
+  ansible.posix.synchronize:
+    src: /home/cableman/LogicAnalyzer
+    dest: /home/cableman/
+    delete: true
+    checksum: true
+  become: false
+  tags:
+    - logicanalyzer
 # yEd Graph editor
 # arduino IDE
 

@@ -40,6 +40,29 @@
 #     name: en_NZ.utf8
 #     state: present
 
+- name: Create symbolic link on /mnt/storage/Install
+  ansible.builtin.file:
+    src: /mnt/storage/Install
+    dest: /home/cableman/Install
+    state: link
+    owner: cableman
+    group: cableman
+    force: false
+  become: false
+  tags:
+    - symlink
+
+- name: Copy Saleae Logic Analizer icon
+  ansible.builtin.copy:
+    src: SaleaeLogic.svg
+    dest: /home/cableman/Install
+    owner: cableman
+    group: cableman
+    mode: "0664"
+  become: false
+  tags:
+    - logicanalyzer
+
 - name: Setup time locale
   ansible.builtin.command: update-locale LC_TIME=en_NZ.utf8
   register: my_output # <-Registers the command output.

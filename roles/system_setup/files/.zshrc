@@ -156,6 +156,7 @@ alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 alias ipa="ip a"
 alias ssdhealth="sudo smartctl -t short -a /dev/nvme0"
+alias exa="exa -lhga"
 source /home/cableman/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source <(minikube completion zsh)
 source <(helm completion zsh)

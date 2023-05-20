@@ -50,7 +50,7 @@
     force: false
   become: false
   tags:
-    - symlink
+    - symlinks
 
 - name: Copy Saleae Logic Analizer icon
   ansible.builtin.copy:
@@ -255,6 +255,13 @@
     owner: cableman
   tags:
     - mbutton
+# - name: Copy desktop directory file to desktop directory
+#   ansible.builtin.copy:
+#     src: xfce-electronics.directory
+#     dest: /usr/share/desktop-directories
+#     mode: "0644"
+#   tags:
+#     - electronics_menu
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
 # просмотреть и применить все заметки  Linux Install

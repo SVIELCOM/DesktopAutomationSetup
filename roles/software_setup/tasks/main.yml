@@ -654,6 +654,16 @@
   become: false
   tags:
     - logicanalyzer
+
+- name: Copy SVIELCOM vscode theme
+  ansible.posix.synchronize:
+    src: /home/cableman/.vscode/extensions/svielcom-theme
+    dest: /home/cableman/.vscode/extensions/
+    delete: true
+    checksum: true
+  become: false
+  tags:
+    - vscode
 # yEd Graph editor
 # arduino IDE
 

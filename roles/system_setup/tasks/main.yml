@@ -255,14 +255,57 @@
     owner: cableman
   tags:
     - mbutton
-# - name: Copy desktop directory file to desktop directory
-#   ansible.builtin.copy:
-#     src: xfce-electronics.directory
-#     dest: /usr/share/desktop-directories
-#     mode: "0644"
+
+- name: Copy desktop directory file to desktop directory
+  ansible.builtin.copy:
+    src: xfce-electronics.directory
+    dest: /usr/share/desktop-directories
+    mode: "0644"
+  tags:
+    - electronics_menu
+# - name: Add lines in
+#   community.general.xml:
+#     path: /etc/xdg/menus/xfce-applications.menu.test
+#     xpath: /Menu/Menu[Name='Education']
+#     content: text
+#   register: result
 #   tags:
 #     - electronics_menu
+
+# TODO модуль lxml не завелся. Разобраться в следующие разы, когда на контроллере и на таргете будет одна и та же версия python
+# - ansible.builtin.xml:
+#     path: /etc/xdg/menus/xfce-applications.menu.test
+#     xpath: /Menu/Menu[Name='Education']
+#     content: text
+#   register: result
+#   tags:
+#     - electronics_menu
+# - ansible.builtin.debug:
+#     var: result.matches|default([])
+#   tags:
+#     - electronics_menu
+# Сейчас вставлен костыль в виде копирования всего файла
+- name: Copy xfce-applications.menu
+  ansible.builtin.copy:
+    src: xfce-applications.menu
+    dest: /etc/xdg/menus
+    force: true
+    mode: "0644"
+  tags:
+    - electronics_menu
+
+- name: Insert line on file ~/.config/menus/xfce-applications.menu
+  ansible.builtin.lineinfile:
+    path: /home/cableman/.config/menus/xfce-applications.menu
+    #regexp: "<Menuname>Education</Menuname>"
+    insertafter: "<Menuname>Education</Menuname>"
+    line: "                <Menuname>Electronics</Menuname>"
+    state: present
+  tags:
+    - electronics_menu
+#
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
 # просмотреть и применить все заметки  Linux Install
 # скопировать с установленной машины свойства загрузчика
+# добавить exa completions

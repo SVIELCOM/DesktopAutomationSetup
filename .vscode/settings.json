@@ -13,5 +13,6 @@
         ],
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": "file:///home/cableman/Install/AutomationInstall/group_vars.yml",
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/meta.json": "file:///home/cableman/Install/AutomationInstall/roles/software_setup/meta/main.yml"
-    }
+    },
+    "ansible.python.interpreterPath": "/bin/python3.9"
 }

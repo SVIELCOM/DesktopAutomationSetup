@@ -3,7 +3,9 @@
   hosts: all
   gather_facts: true
   become: true
-#  become_user: root
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  #  become_user: root
   roles:
     - { role: hardware_setup, tags: ["hardware"] }
     - { role: software_setup, tags: ["software"] }

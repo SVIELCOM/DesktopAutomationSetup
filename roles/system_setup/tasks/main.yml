@@ -72,6 +72,8 @@
   ansible.builtin.stat:
     path: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
   register: xfce_conf_dir_exists
+  tags:
+    - xfce
 
 - name: Copy files for xfce
   ansible.builtin.copy:
@@ -92,7 +94,23 @@
     - "xfce4-taskmanager.xml"
     - "xfwm4.xml"
     - "xsettings.xml"
+    - "displays.xml"
+    - "xfce4-power-manager.xml"
   when: xfce_conf_dir_exists.stat.exists
+  tags:
+    - xfce
+
+- name: Copy xfce panel directory
+  ansible.builtin.copy:
+    src: panel
+    dest: /home/cableman/.config/xfce4/
+    mode: "066"
+    #    directory_mode: true
+    force: true
+    owner: cableman
+    group: cableman
+  tags:
+    - xfce
 
 - name: Copy .bashrc and zshrc
   ansible.builtin.copy:
@@ -114,7 +132,7 @@
     shell: /usr/bin/zsh
     state: present
   tags:
-    - "zsh"
+    - zsh
 
 # - name: Copy ohmyzsh.sh
 #   ansible.builtin.copy:

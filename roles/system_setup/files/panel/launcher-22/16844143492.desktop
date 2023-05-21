@@ -1,0 +1,19 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Icon=eeschema
+Type=Application
+Categories=Science;Electronics;
+Exec=eeschema %f
+StartupWMClass=eeschema
+MimeType=application/x-kicad-schematic;
+Name[en]=KiCad Schematic Editor (Standalone)
+Name=KiCad Schematic Editor (Standalone)
+GenericName[en]=Schematic Capture Tool
+GenericName=Schematic Capture Tool
+Comment[en]=Standalone schematic editor for KiCad schematics
+Comment=Standalone schematic editor for KiCad schematics
+Keywords[en]=eeschema
+Keywords=eeschema
+X-AppStream-Ignore=true
+X-XFCE-Source=file:///usr/share/applications/org.kicad.eeschema.desktop

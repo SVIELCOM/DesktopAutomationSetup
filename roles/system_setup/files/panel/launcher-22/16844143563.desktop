@@ -1,0 +1,19 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Icon=pcbnew
+Type=Application
+Categories=Science;Electronics;
+Exec=pcbnew %f
+StartupWMClass=pcbnew
+MimeType=application/x-kicad-pcb;
+Name[en]=KiCad PCB Editor (Standalone)
+Name=KiCad PCB Editor (Standalone)
+GenericName[en]=PCB layout editor
+GenericName=PCB layout editor
+Comment[en]=Standalone circuit board editor for KiCad boards
+Comment=Standalone circuit board editor for KiCad boards
+Keywords[en]=pcbnew
+Keywords=pcbnew
+X-AppStream-Ignore=true
+X-XFCE-Source=file:///usr/share/applications/org.kicad.pcbnew.desktop

@@ -219,7 +219,6 @@
       - "python3-pip"
       - "apt-transport-https"
       - "helm"
-      - "virtualbox-7.0"
       - "sublime-text"
       - "veracrypt"
       - "vlc"

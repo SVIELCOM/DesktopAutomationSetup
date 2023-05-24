@@ -603,7 +603,7 @@
   changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
   tags:
     - telegram
-# TODO copy ansible linter config what for?
+
 # TODO transfer Kicad config and libraries
 
 - name: Synchronize thunderbird directory
@@ -653,6 +653,16 @@
   become: false
   tags:
     - logicanalyzer
+
+- name: Ensure that the directory /home/cableman/.vscode/extensions exists
+  ansible.builtin.file:
+    path: /home/cableman/.vscode/extensions
+    owner: cableman
+    group: cableman
+    state: directory
+    mode: "0755"
+  tags:
+    - vscode
 
 - name: Copy SVIELCOM vscode theme
   ansible.posix.synchronize:

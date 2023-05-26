@@ -104,7 +104,7 @@
   ansible.builtin.copy:
     src: panel
     dest: /home/cableman/.config/xfce4/
-    mode: "066"
+    mode: "0666"
     #    directory_mode: true
     force: true
     owner: cableman
@@ -265,12 +265,24 @@
   tags:
     - xsession
 
+- name: Ensure that the directory /home/cableman/.config/autostart/ exists
+  ansible.builtin.file:
+    path: /home/cableman/.config/autostart/
+    state: directory
+    mode: "775"
+    owner: cableman
+    group: cableman
+  tags:
+    - mbutton
+
 - name: Copy desktop file for add middle mouse button
   ansible.builtin.copy:
     src: middle_mouse_button.desktop
-    dest: /home/cableman/.config/autostart
+    dest: /home/cableman/.config/autostart/
     mode: "0600"
     owner: cableman
+    group: cableman
+    force: true
   tags:
     - mbutton
 
@@ -311,16 +323,15 @@
     mode: "0644"
   tags:
     - electronics_menu
-
-- name: Insert line on file ~/.config/menus/xfce-applications.menu
-  ansible.builtin.lineinfile:
-    path: /home/cableman/.config/menus/xfce-applications.menu
-    #regexp: "<Menuname>Education</Menuname>"
-    insertafter: "<Menuname>Education</Menuname>"
-    line: "                <Menuname>Electronics</Menuname>"
-    state: present
-  tags:
-    - electronics_menu
+# - name: Insert line in file ~/.config/menus/xfce-applications.menu
+#   ansible.builtin.lineinfile:
+#     path: /home/cableman/.config/menus/xfce-applications.menu
+#     #regexp: "<Menuname>Education</Menuname>"
+#     insertafter: "<Menuname>Education</Menuname>"
+#     line: "                <Menuname>Electronics</Menuname>"
+#     state: present
+#   tags:
+#     - electronics_menu
 #
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart

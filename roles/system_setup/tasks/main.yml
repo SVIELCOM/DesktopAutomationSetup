@@ -112,6 +112,23 @@
   tags:
     - xfce
 
+- name: Collect files to delete
+  ansible.builtin.find:
+    paths: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml
+    patterns: "*@*~"
+  register: files_to_delete
+  tags:
+    - xfce
+
+- name: Delete all files in .config/xfce4/xfconf/xfce-perchannel-xml/ contain @ and ~ in the names
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+  tags:
+    - xfce
+
+
 - name: Copy .bashrc and zshrc
   ansible.builtin.copy:
     src: "{{ item }}"

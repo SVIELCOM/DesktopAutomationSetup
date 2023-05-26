@@ -340,6 +340,15 @@
     mode: "0644"
   tags:
     - electronics_menu
+
+- name: Copy xubuntu xfce-applications.menu
+  ansible.builtin.copy:
+    src: xubuntu-menu/xfce-applications.menu
+    dest: /etc/xdg/xdg-xubuntu/menus
+    force: true
+    mode: "0644"
+  tags:
+    - electronics_menu
 # - name: Insert line in file ~/.config/menus/xfce-applications.menu
 #   ansible.builtin.lineinfile:
 #     path: /home/cableman/.config/menus/xfce-applications.menu
@@ -349,6 +358,7 @@
 #     state: present
 #   tags:
 #     - electronics_menu
+
 #
 # TODO disable blocking after 30 min IdleTimeout
 # xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart

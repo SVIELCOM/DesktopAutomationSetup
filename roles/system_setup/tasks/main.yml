@@ -128,6 +128,7 @@
   tags:
     - xfce
 
+#killall -HUP xfdesktop
 
 - name: Copy .bashrc and zshrc
   ansible.builtin.copy:
@@ -372,15 +373,47 @@
     - ssh_keys
 
 - name: Create an authorized_keys file with public ssh key
-- ansible.posix.authorized_key:
+  ansible.posix.authorized_key:
     user: "cableman"
     key: "{{ lookup('file', '/home/cableman/.ssh/id_rsa.pub') }}"
     state: present
   tags:
     - ssh_keys
 
+- name: Edit the grub config file
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    create: false
+  loop:
+    - {
+        regexp: "^GRUB_TIMEOUT_STYLE=",
+        line: 'GRUB_TIMEOUT_STYLE=menu',
+      }
+    - {
+        regexp: "^GRUB_TIMEOUT=",
+        line: 'GRUB_TIMEOUT=0',
+      }
+    - {
+        regexp: "^GRUB_CMDLINE_LINUX_DEFAULT=",
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT=""',
+      }
+    - {
+        regexp: "GRUB_TERMINAL=",
+        line: 'GRUB_TERMINAL=console',
+      }
+  notify: update_grub
+  tags:
+    - grub_cfg
+
+
+
+
 # TODO disable blocking after 30 min IdleTimeout
-# xmodmap -e "pointer = 1 0 3 4 5 6 7 2" to autostart
+
 # просмотреть и применить все заметки  Linux Install
 # скопировать с установленной машины свойства загрузчика
 # добавить exa completions
+# отключить swap
+# сделать тюнинг для ССД

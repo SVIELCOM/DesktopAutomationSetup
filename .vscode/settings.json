@@ -1,7 +1,8 @@
 {
   "yaml.schemas": {
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
-      "file:///home/cableman/Install/AutomationInstall/automation_setup.yml"
+      "file:///home/cableman/Install/AutomationInstall/automation_setup.yml",
+      "file:///home/cableman/Documents/AutomationInstall/roles/system_setup/handlers/main.yml"
     ],
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": [
       "file:///home/cableman/Install/AutomationInstall/roles/software_setup/tasks/main.yml",

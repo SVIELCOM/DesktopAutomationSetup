@@ -2,7 +2,7 @@
 # tasks file for software_setup
 - name: Remove snap
   ansible.builtin.apt:
-    name: "snap"
+    name: "snapd"
     state: absent
     update_cache: false
   tags:

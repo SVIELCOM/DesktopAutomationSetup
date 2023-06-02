@@ -7,5 +7,10 @@
 
 - name: update_grub
   ansible.builtin.command: update-grub2
-#  register: my_output # <-Registers the command output.
-#  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+
+- name: restart_xfdesktop
+  ansible.builtin.command: killall -HUP xfdesktop
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.

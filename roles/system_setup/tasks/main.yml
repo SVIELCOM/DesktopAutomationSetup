@@ -125,10 +125,11 @@
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ files_to_delete.files }}"
+  notify: restart_xfdesktop
   tags:
     - xfce
 
-#killall -HUP xfdesktop
+
 
 - name: Copy .bashrc and zshrc
   ansible.builtin.copy:
@@ -409,10 +410,6 @@
 
 
 
-# TODO disable blocking after 30 min IdleTimeout
 
-# просмотреть и применить все заметки  Linux Install
-# скопировать с установленной машины свойства загрузчика
-# добавить exa completions
 # отключить swap
 # сделать тюнинг для ССД

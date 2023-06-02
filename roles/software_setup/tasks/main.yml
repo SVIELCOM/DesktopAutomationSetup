@@ -262,6 +262,7 @@
       - "exfatprogs"
       - "code" # Install VS Code
       - "thunderbird"
+      - "smplayer"
   tags:
     - packages
 

@@ -408,7 +408,14 @@
   tags:
     - grub_cfg
 
-
+- name: Copy lightdm conf and greeter.conf
+  ansible.builtin.copy:
+    src: lightdm/
+    dest: /etc/lightdm/
+    force: true
+    mode: "0644"
+  tags:
+    - lightdm
 
 
 

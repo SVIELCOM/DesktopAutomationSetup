@@ -60,13 +60,21 @@
   tags:
     - icons
 
-- name: Copy wallpapers jpg
+- name: Copy wallpapers jpg to home dir
   ansible.builtin.copy:
     src: wallpapers
     dest: /home/cableman/
     mode: '0664'
     owner: cableman
     group: cableman
+  tags:
+    - wallpapers
+
+- name: Copy wallpapers jpg to /usr/share/xfce4/backdrops/ dir
+  ansible.builtin.copy:
+    src: wallpapers
+    dest: /usr/share/xfce4/backdrops/
+    mode: '0644'
   tags:
     - wallpapers
 

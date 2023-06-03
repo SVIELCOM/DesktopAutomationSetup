@@ -417,7 +417,46 @@
   tags:
     - lightdm
 
+- name: Disabling swap
+  ansible.builtin.command: "swapoff --all"
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - swapoff
 
+- name: Disable swap permanently, persist reboots
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+    backup: yes
+  tags:
+    - swapoff
 
-# отключить swap
+- name: Add lines to /etc/fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ item }}"
+    create: false
+  loop:
+    - "tmpfs  /tmp  tmpfs  defaults,noatime,mode=1777  0  0"
+    - "tmpfs  /var/tmp  tmpfs  defaults,noatime,mode=1777  0  0"
+  tags:
+    - ssd_optimization
+
+- name: Set zfs pools options
+  ansible.builtin.command: "zfs set {{ item }}"
+  loop:
+    - 'atime=off bpool'
+    - 'relatime=off bpool'
+    - 'overlay=off bpool'
+    - 'recordsize=1M rpool'
+    - 'atime=off rpool'
+    - 'relatime=off rpool'
+    - 'overlay=off rpool'
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - ssd_optimization
+
 # сделать тюнинг для ССД

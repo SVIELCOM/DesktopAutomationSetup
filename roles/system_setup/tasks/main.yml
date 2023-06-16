@@ -459,4 +459,9 @@
   tags:
     - ssd_optimization
 
-# сделать тюнинг для ССД
+- name: Ensure user added to dialout group for access to UART ports
+  ansible.builtin.user:
+    name: cableman
+    groups:
+      - dialout
+    append: true

@@ -271,8 +271,28 @@
       - "code" # Install VS Code
       - "thunderbird"
       - "smplayer"
+      - "cifs-utils" # for access to samba shares
+      - "autofs"
   tags:
-    - packages
+    - 'packages'
+
+- name: Install NFS packages to desktop
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+    state: present
+    update_cache: false
+  when: ansible_form_factor == "Desktop"
+  tags:
+    - 'nfs'
+
+- name: Install NFS packages to laptop
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+    update_cache: false
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - 'nfs'
 
 - name: Copy terminator config file to directory
   ansible.builtin.copy:
@@ -283,7 +303,7 @@
     mode: "0664"
     force: true
   tags:
-    - terminator
+    - 'terminator'
 
 - name: Set terminator as default terminal emulator in alternatives list
   community.general.alternatives:

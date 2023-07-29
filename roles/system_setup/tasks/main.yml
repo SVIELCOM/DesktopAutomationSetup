@@ -49,8 +49,11 @@
     group: cableman
     force: false
   become: false
+  when: ansible_form_factor == "Desktop"
   tags:
     - symlinks
+
+# TODO Add symbolic links for laptop
 
 - name: Copy Saleae Logic Analizer icon
   ansible.builtin.copy:
@@ -75,9 +78,9 @@
   tags:
     - xfce
 
-- name: Copy files for xfce
+- name: Copy files for xfce (Desktop)
   ansible.builtin.copy:
-    src: xfce-perchannel-xml/{{ item }}
+    src: desktop/xfce-perchannel-xml/{{ item }}
     dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
     owner: cableman
     group: cableman
@@ -96,19 +99,22 @@
     - "xsettings.xml"
     - "displays.xml"
     - "xfce4-power-manager.xml"
-  when: xfce_conf_dir_exists.stat.exists
+  when:
+    - xfce_conf_dir_exists.stat.exists
+    - ansible_form_factor == "Desktop"
   tags:
     - xfce
 
-- name: Copy xfce panel directory
+- name: Copy xfce panel directory (Desktop)
   ansible.builtin.copy:
-    src: panel
+    src: desktop/panel
     dest: /home/cableman/.config/xfce4/
     mode: "0666"
     #    directory_mode: true
     force: true
     owner: cableman
     group: cableman
+  when: ansible_form_factor == "Desktop"
   tags:
     - xfce
 
@@ -129,11 +135,9 @@
   tags:
     - xfce
 
-
-
-- name: Copy .bashrc and zshrc
+- name: Copy .bashrc and zshrc (Desktop)
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: desktop/"{{ item }}"
     dest: /home/cableman/
     owner: cableman
     group: cableman
@@ -144,6 +148,7 @@
     - ".bash_aliases"
     - ".zshrc"
     - ".p10k.zsh"
+  when: ansible_form_factor == "Desktop"
 
 - name: Ensure ZSH set as default shell
   ansible.builtin.user:
@@ -187,12 +192,6 @@
     mode: "0644"
     create: false
   notify: Bluetooth_restart
-
-- name: Remove unattended-upgrades
-  ansible.builtin.apt:
-    package:
-      - unattended-upgrades
-    state: absent
 
 - name: Config auto upgrades
   ansible.builtin.lineinfile:
@@ -408,12 +407,13 @@
   tags:
     - grub_cfg
 
-- name: Copy lightdm conf and greeter.conf
+- name: Copy lightdm conf and greeter.conf (Desktop)
   ansible.builtin.copy:
-    src: lightdm/
+    src: desktop/lightdm/
     dest: /etc/lightdm/
     force: true
     mode: "0644"
+  when: ansible_form_factor == "Desktop"
   tags:
     - lightdm
 
@@ -441,6 +441,18 @@
   loop:
     - "tmpfs  /tmp  tmpfs  defaults,noatime,mode=1777  0  0"
     - "tmpfs  /var/tmp  tmpfs  defaults,noatime,mode=1777  0  0"
+  tags:
+    - ssd_optimization
+
+- name: Add lines to /etc/fstab (Laptop only)
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ item }}"
+    create: false
+  loop:
+    - "tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0"
+    - "tmpfs /var/log/apt tmpfs defaults,noatime 0 0"
+  when: when: ansible_form_factor == "Notebook"
   tags:
     - ssd_optimization
 

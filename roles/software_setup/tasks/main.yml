@@ -662,6 +662,7 @@
   vars:
     packages: # TODO move packages to variable
       - "file-roller"
+      - "unattended-upgrades"
 
 - name: Ensure that the directory 'Saleae Logic Analyzer' exists
   ansible.builtin.file:

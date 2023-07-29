@@ -78,15 +78,15 @@
   tags:
     - wallpapers
 
-- name: Copy xfce desktop conf file
+- name: Copy xfce desktop conf file (for desktop)
   ansible.builtin.copy:
-    src: xfce4-desktop.xml
+    src: desktop/xfce4-desktop.xml
     dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
     owner: cableman
     group: cableman
     mode: '0664'
     force: true
-  when: ansible_nodename == "vlad"
+  when: ansible_form_factor == "Desktop"
   tags:
     - wallpapers
 

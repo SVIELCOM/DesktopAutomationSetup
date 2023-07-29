@@ -90,6 +90,18 @@
   tags:
     - wallpapers
 
+- name: Copy xfce desktop conf file (for laptop)
+  ansible.builtin.copy:
+    src: laptop/xfce4-desktop.xml
+    dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
+    owner: cableman
+    group: cableman
+    mode: '0664'
+    force: true
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - wallpapers
+
 - name: Ensure directory /tmp/xfce-simple-dark is not exists
   ansible.builtin.file:
     path: /tmp/xfce-simple-dark

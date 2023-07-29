@@ -1,0 +1,17 @@
+[Desktop Entry]
+Terminal=false
+Name=Okular
+Name[ru]=Okular
+GenericName=Document Viewer
+GenericName[ru]=Просмотр документов
+Comment=Universal document viewer
+Comment[ru]=Универсальная программа просмотра документов
+Exec=okular %U
+Icon=okular
+Type=Application
+X-DocPath=okular/index.html
+InitialPreference=7
+Categories=Qt;KDE;Graphics;Office;Viewer;
+MimeType=application/vnd.kde.okular-archive;
+X-DBUS-ServiceName=org.kde.okular
+X-XFCE-Source=file:///usr/share/applications/org.kde.okular.desktop

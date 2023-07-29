@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Logic_Analizer
+Comment=
+Exec=/home/cableman/LogicAnalyzer/Logic-2.4.7-master.AppImage
+Icon=/home/cableman/Install/SaleaeLogic.svg
+Path=/home/cableman/LogicAnalyzer
+Terminal=false
+StartupNotify=false

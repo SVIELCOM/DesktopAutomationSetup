@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Pcbnew (Standalone)
+Comment=KiCad printed circuit board layout (standalone)
+Exec=pcbnew %f
+Icon=pcbnew
+Path=
+Terminal=false
+StartupNotify=false

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Eeschema (Standalone)
+Comment=KiCad electronic schematic design (standalone)
+Exec=eeschema %f
+Icon=eeschema
+Path=
+Terminal=false
+StartupNotify=false

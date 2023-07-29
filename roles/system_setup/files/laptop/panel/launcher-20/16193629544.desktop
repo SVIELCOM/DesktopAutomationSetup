@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Krusader
+Name[ru]=Krusader
+Exec=krusader -qwindowtitle %c %u
+Icon=krusader_user
+Terminal=false
+Type=Application
+X-DocPath=krusader/index.html
+Categories=FileManager;Utility;Qt;KDE;
+StartupWMClass=krusader
+Comment=Twin-Panel File Manager
+Comment[ru]=Двухпанельный диспетчер файлов
+GenericName=File Manager
+GenericName[ru]=Менеджер файлов
+X-XFCE-Source=file:///usr/share/applications/org.kde.krusader.desktop

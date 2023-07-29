@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Bitmap to Component Converter
+Comment=Create a component from a bitmap for use with KiCad
+Exec=bitmap2component
+Icon=bitmap2component
+Path=
+Terminal=false
+StartupNotify=false

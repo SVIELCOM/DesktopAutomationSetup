@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=STMicroelectronics STM32CubeIDE 1.6.1
+Comment=STMicroelectronics STM32CubeIDE 1.6.1
+GenericName=STM32CubeIDE
+Exec=/opt/st/stm32cubeide_1.6.1/stm32cubeide %F
+Icon=/opt/st/stm32cubeide_1.6.1/icon.xpm
+Path=/opt/st/stm32cubeide_1.6.1/
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Development
+X-XFCE-Source=file:///usr/share/applications/st-stm32cubeide-1.6.1.desktop

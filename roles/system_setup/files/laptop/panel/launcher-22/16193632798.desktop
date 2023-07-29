@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=KiCad
+Comment=Electronic Design Automation suite
+Exec=kicad %f
+Icon=kicad
+Path=
+Terminal=false
+StartupNotify=false

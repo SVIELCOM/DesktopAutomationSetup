@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=W7_64
+Comment=Starts the VirtualBox machine W7_64
+Type=Application
+Exec=/usr/lib/virtualbox/VirtualBoxVM --comment "W7_64" --startvm "{e65e44f2-b77e-4cc9-bb74-0e899524edec}"
+Icon=virtualbox-vmdk
+X-XFCE-Source=file:///home/cableman/Desktop/W7_64.desktop
+Path=
+Terminal=false
+StartupNotify=false

@@ -105,6 +105,33 @@
   tags:
     - xfce
 
+- name: Copy files for xfce (Laptop)
+  ansible.builtin.copy:
+    src: laptop/xfce-perchannel-xml/{{ item }}
+    dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
+    owner: cableman
+    group: cableman
+    mode: "0664"
+    force: true
+    backup: true
+  with_items:
+    - "keyboards.xml"
+    - "keyboard-layout.xml"
+    - "thunar-volman.xml"
+    - "thunar.xml"
+    - "xfce4-keyboard-shortcuts.xml"
+    - "xfce4-panel.xml"
+    - "xfce4-taskmanager.xml"
+    - "xfwm4.xml"
+    - "xsettings.xml"
+    - "displays.xml"
+    - "xfce4-power-manager.xml"
+  when:
+    - xfce_conf_dir_exists.stat.exists
+    - ansible_form_factor == "Notebook"
+  tags:
+    - xfce
+
 - name: Copy xfce panel directory (Desktop)
   ansible.builtin.copy:
     src: desktop/panel
@@ -117,6 +144,20 @@
   when: ansible_form_factor == "Desktop"
   tags:
     - xfce
+
+- name: Copy xfce panel directory (Laptop)
+  ansible.builtin.copy:
+    src: laptop/panel
+    dest: /home/cableman/.config/xfce4/
+    mode: "0666"
+    #    directory_mode: true
+    force: true
+    owner: cableman
+    group: cableman
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - xfce
+
 
 - name: Collect files to delete
   ansible.builtin.find:
@@ -149,6 +190,21 @@
     - ".zshrc"
     - ".p10k.zsh"
   when: ansible_form_factor == "Desktop"
+
+- name: Copy .bashrc and zshrc (Laptop)
+  ansible.builtin.copy:
+    src: laptop/"{{ item }}"
+    dest: /home/cableman/
+    owner: cableman
+    group: cableman
+    mode: "0644"
+    force: true
+  with_items:
+    - ".bashrc"
+    - ".bash_aliases"
+    - ".zshrc"
+    - ".p10k.zsh"
+  when: ansible_form_factor == "Notebook"
 
 - name: Ensure ZSH set as default shell
   ansible.builtin.user:
@@ -452,7 +508,7 @@
   loop:
     - "tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0"
     - "tmpfs /var/log/apt tmpfs defaults,noatime 0 0"
-  when: when: ansible_form_factor == "Notebook"
+  when: ansible_form_factor == "Notebook"
   tags:
     - ssd_optimization
 
@@ -477,3 +533,16 @@
     groups:
       - dialout
     append: true
+
+- name: Add lines to /etc/fstab (Laptop only) for NFS shares
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ item }}"
+    create: false
+  loop:
+    - "10.3.255.65:/mnt/backup /mnt/nfs/vlad/backup            nfs _netdev,noauto,x-systemd.automount,x-systemd.mount-timeout=5,timeo=5,x-systemd.idle-timeout=1min 0 0"
+    - "10.3.255.65:/mnt/storage /mnt/nfs/vlad/storage          nfs _netdev,noauto,x-systemd.automount,x-systemd.mount-timeout=5,timeo=5,x-systemd.idle-timeout=1min 0 0"
+    - "10.3.255.65:/home/cableman /mnt/nfs/vlad/home           nfs _netdev,noauto,x-systemd.automount,x-systemd.mount-timeout=5,timeo=5,x-systemd.idle-timeout=1min 0 0"
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - nfs

@@ -72,33 +72,9 @@
 
 - name: Copy wallpapers jpg to /usr/share/xfce4/backdrops/ dir
   ansible.builtin.copy:
-    src: wallpapers
+    src: wallpapers/
     dest: /usr/share/xfce4/backdrops/
     mode: '0644'
-  tags:
-    - wallpapers
-
-- name: Copy xfce desktop conf file (for desktop)
-  ansible.builtin.copy:
-    src: desktop/xfce4-desktop.xml
-    dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
-    owner: cableman
-    group: cableman
-    mode: '0664'
-    force: true
-  when: ansible_form_factor == "Desktop"
-  tags:
-    - wallpapers
-
-- name: Copy xfce desktop conf file (for laptop)
-  ansible.builtin.copy:
-    src: laptop/xfce4-desktop.xml
-    dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
-    owner: cableman
-    group: cableman
-    mode: '0664'
-    force: true
-  when: ansible_form_factor == "Notebook"
   tags:
     - wallpapers
 
@@ -107,6 +83,9 @@
     path: /tmp/xfce-simple-dark
     state: absent
     force: true
+  tags:
+    - themes
+    - xfce-simple-dark
 
 - name: Clone Xfce-Simple-Dark github repo
   ansible.builtin.git:

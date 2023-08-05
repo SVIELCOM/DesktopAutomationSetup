@@ -80,25 +80,12 @@
 
 - name: Copy files for xfce (Desktop)
   ansible.builtin.copy:
-    src: desktop/xfce-perchannel-xml/{{ item }}
+    src: desktop/xfce-perchannel-xml/
     dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
     owner: cableman
     group: cableman
     mode: "0664"
     force: true
-    backup: true
-  with_items:
-    - "keyboards.xml"
-    - "keyboard-layout.xml"
-    - "thunar-volman.xml"
-    - "thunar.xml"
-    - "xfce4-keyboard-shortcuts.xml"
-    - "xfce4-panel.xml"
-    - "xfce4-taskmanager.xml"
-    - "xfwm4.xml"
-    - "xsettings.xml"
-    - "displays.xml"
-    - "xfce4-power-manager.xml"
   when:
     - xfce_conf_dir_exists.stat.exists
     - ansible_form_factor == "Desktop"
@@ -107,25 +94,12 @@
 
 - name: Copy files for xfce (Laptop)
   ansible.builtin.copy:
-    src: laptop/xfce-perchannel-xml/{{ item }}
+    src: laptop/xfce-perchannel-xml/
     dest: /home/cableman/.config/xfce4/xfconf/xfce-perchannel-xml/
     owner: cableman
     group: cableman
     mode: "0664"
     force: true
-    backup: true
-  with_items:
-    - "keyboards.xml"
-    - "keyboard-layout.xml"
-    - "thunar-volman.xml"
-    - "thunar.xml"
-    - "xfce4-keyboard-shortcuts.xml"
-    - "xfce4-panel.xml"
-    - "xfce4-taskmanager.xml"
-    - "xfwm4.xml"
-    - "xsettings.xml"
-    - "displays.xml"
-    - "xfce4-power-manager.xml"
   when:
     - xfce_conf_dir_exists.stat.exists
     - ansible_form_factor == "Notebook"
@@ -472,6 +446,16 @@
     force: true
     mode: "0644"
   when: ansible_form_factor == "Desktop"
+  tags:
+    - lightdm
+
+- name: Copy lightdm conf and greeter.conf (Laptop)
+  ansible.builtin.copy:
+    src: laptop/lightdm/
+    dest: /etc/lightdm/
+    force: true
+    mode: "0644"
+  when: ansible_form_factor == "Notebook"
   tags:
     - lightdm
 

@@ -178,33 +178,35 @@
 
 - name: Copy .bashrc and zshrc (Desktop)
   ansible.builtin.copy:
-    src: desktop/"{{ item }}"
+    src: desktop/{{ item }}
     dest: /home/cableman/
     owner: cableman
     group: cableman
     mode: "0644"
     force: true
   with_items:
-    - ".bashrc"
-    - ".bash_aliases"
-    - ".zshrc"
-    - ".p10k.zsh"
+    - .bashrc
+    - .bash_aliases
+    - .zshrc
+    - .p10k.zsh
   when: ansible_form_factor == "Desktop"
 
 - name: Copy .bashrc and zshrc (Laptop)
   ansible.builtin.copy:
-    src: laptop/"{{ item }}"
+    src: laptop/{{ item }}
     dest: /home/cableman/
     owner: cableman
     group: cableman
     mode: "0644"
     force: true
   with_items:
-    - ".bashrc"
-    - ".bash_aliases"
-    - ".zshrc"
-    - ".p10k.zsh"
+    - .bashrc
+    - .bash_aliases
+    - .zshrc
+    - .p10k.zsh
   when: ansible_form_factor == "Notebook"
+  tags: 
+    - copy_rcs
 
 - name: Ensure ZSH set as default shell
   ansible.builtin.user:

@@ -1,9 +1,14 @@
 ---
 # tasks file for software_setup
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
 - name: Remove FireFox snap package
   community.general.snap:
     name: firefox
     state: absent
+  when: "'snapd' in ansible_facts.packages"
   tags:
     - "snap"
 
@@ -13,6 +18,7 @@
     state: absent
     purge: true
     update_cache: false
+  when: "'snapd' in ansible_facts.packages"
   tags:
     - "snap"
 

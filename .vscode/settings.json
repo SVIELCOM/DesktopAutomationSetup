@@ -1,8 +1,7 @@
 {
   "yaml.schemas": {
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
-      "file:///home/cableman/Install/AutomationInstall/automation_setup.yml",
-      "file:///home/cableman/Documents/AutomationInstall/roles/software_setup/tasks/main.yml"
+      "file:///home/cableman/Install/AutomationInstall/automation_setup.yml"
     ],
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": [
       "file:///home/cableman/Install/AutomationInstall/roles/software_setup/tasks/main.yml",
@@ -11,7 +10,8 @@
       "file:///home/cableman/Install/AutomationInstall/roles/themes_setup/tasks/main.yml",
       "file:///home/cableman/Documents/AutomationInstall/roles/system_setup/tasks/main.yml",
       "file:///home/cableman/Documents/AutomationInstall/roles/software_setup/tasks/install_virtualbox_and_extpack.yml",
-      "file:///home/cableman/Documents/AutomationInstall/roles/themes_setup/tasks/main.yml"
+      "file:///home/cableman/Documents/AutomationInstall/roles/themes_setup/tasks/main.yml",
+      "file:///home/cableman/Documents/AutomationInstall/roles/software_setup/tasks/main.yml"
     ],
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": "file:///home/cableman/Install/AutomationInstall/group_vars.yml",
     "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/meta.json": "file:///home/cableman/Install/AutomationInstall/roles/software_setup/meta/main.yml",

@@ -1,3 +1,10 @@
 ---
 # tasks file for hardware_setup
-# TODO mice buttons
+- name: Install nvidia driver to laptop
+  ansible.builtin.apt:
+      name: "{{ laptop_video_driver_package }}"
+      state: present
+      update_cache: true
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - videodriver

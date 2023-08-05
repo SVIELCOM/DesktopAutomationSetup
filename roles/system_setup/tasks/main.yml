@@ -179,7 +179,7 @@
     - .zshrc
     - .p10k.zsh
   when: ansible_form_factor == "Notebook"
-  tags: 
+  tags:
     - copy_rcs
 
 - name: Ensure ZSH set as default shell
@@ -471,7 +471,7 @@
     path: /etc/fstab
     regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
     replace: '# \1'
-    backup: yes
+    backup: true
   tags:
     - swapoff
 
@@ -532,3 +532,11 @@
   when: ansible_form_factor == "Notebook"
   tags:
     - nfs
+
+- name: Copy seleae logic udev rules file
+  ansible.builtin.copy:
+    src: 99-SaleaeLogic.rules
+    dest: /etc/udev/rules.d/
+    mode: '0644'
+  tags:
+    - logicanalyzer

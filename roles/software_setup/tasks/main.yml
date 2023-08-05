@@ -22,6 +22,15 @@
   tags:
     - "snap"
 
+- name: Add a file for snap never coming back again
+  ansible.builtin.copy:
+    src: nosnap.pref
+    dest: /etc/apt/preferences.d/
+    mode: "0644"
+    force: false
+  tags:
+    - "snap"
+
 - name: Add signing Google key
   ansible.builtin.get_url:
     url: "https://dl.google.com/linux/linux_signing_key.pub"
@@ -204,6 +213,22 @@
   tags:
     - flatpak
 
+- name: Add firefox repository into source list
+  ansible.builtin.command: add-apt-repository --yes --no-update ppa:mozillateam/ppa
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - firefox
+
+- name: Copy some file for disable install firefox thru snap
+  ansible.builtin.copy:
+    src: mozilla-firefox
+    dest: /etc/apt/preferences.d/
+    mode: "0644"
+    force: false
+  tags:
+    - firefox
+
 - name: Install packages
   ansible.builtin.apt:
     name: "{{ packages }}"
@@ -279,6 +304,7 @@
       - "smplayer"
       - "cifs-utils" # for access to samba shares
       - "autofs"
+      - "firefox"
   tags:
     - 'packages'
 

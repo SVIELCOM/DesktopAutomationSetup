@@ -4,7 +4,7 @@
   hide_tabbar = True
   scroll_tabbar = True
   sticky = True
-  enabled_plugins = ActivityWatch, InactivityWatch, CustomCommandsMenu, Logger, MavenPluginURLHandler, TerminalShot, TestPlugin, LaunchpadBugURLHandler, LaunchpadCodeURLHandler, APTURLHandler
+  enabled_plugins = ActivityWatch, InactivityWatch, CustomCommandsMenu, Logger, MavenPluginURLHandler, TerminalShot, TestPlugin, L>
   suppress_multiple_term_dialog = True
   always_split_with_profile = True
 [keybindings]
@@ -15,7 +15,9 @@
     audible_bell = True
     urgent_bell = True
     cursor_color = "#aaaaaa"
+    font = MesloLGS NF 10
     scrollback_infinite = True
+    use_system_font = False
     copy_on_selection = True
 [layouts]
   [[default]]

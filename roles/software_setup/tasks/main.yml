@@ -305,6 +305,10 @@
       - "cifs-utils" # for access to samba shares
       - "autofs"
       - "firefox"
+      - "mtp-tools"
+      - "jmtpfs"
+      - " libudisks2-dev"
+      - "gvfs-backends"
   tags:
     - 'packages'
 

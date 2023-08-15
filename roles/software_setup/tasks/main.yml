@@ -307,8 +307,9 @@
       - "firefox"
       - "mtp-tools"
       - "jmtpfs"
-      - " libudisks2-dev"
+      - "libudisks2-dev"
       - "gvfs-backends"
+      - "whois"
   tags:
     - 'packages'
 

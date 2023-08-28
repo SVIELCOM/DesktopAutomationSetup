@@ -310,6 +310,9 @@
       - "libudisks2-dev"
       - "gvfs-backends"
       - "whois"
+      - "traceroute"
+      - "xfce4-xkb-plugin"
+      - "bat" # batcat
   tags:
     - 'packages'
 

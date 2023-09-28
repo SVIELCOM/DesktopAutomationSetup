@@ -2,9 +2,20 @@
 # tasks file for hardware_setup
 - name: Install nvidia driver to laptop
   ansible.builtin.apt:
-      name: "{{ laptop_video_driver_package }}"
-      state: present
-      update_cache: true
+    name: "{{ laptop_video_driver_package }}"
+    state: present
+    update_cache: true
   when: ansible_form_factor == "Notebook"
   tags:
     - videodriver
+
+- name: Add Intel AX210 driver options for laptop
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/iwlwifi-3options.conf
+    create: true
+    mode: "0644"
+    owner: root
+    line: 'options iwlwifi 11n_disable=8'
+  when: ansible_form_factor == "Notebook"
+  tags:
+    - wifidriver

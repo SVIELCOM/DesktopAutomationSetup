@@ -540,3 +540,34 @@
     mode: '0644'
   tags:
     - logicanalyzer
+
+- name: Create folder for MesloLGS fonts
+  ansible.builtin.file:
+    path: /usr/share/fonts/truetype/meslolgs
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  tags:
+    - fonts
+
+- name: Download fonts for oh-my-zsh
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: /usr/share/fonts/truetype/meslolgs/
+    force: false
+    mode: "0644"
+  loop:
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+    - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+  tags:
+    - fonts
+
+- name: Rebuild the Font Cache
+  ansible.builtin.command: "fc-cache -fv /usr/share/fonts/truetype/meslolgs/"
+  register: my_output # <-Registers the command output.
+  changed_when: my_output.rc != 0 # <-Uses the return code to define when the task has changed.
+  tags:
+    - fonts

@@ -1,7 +1,7 @@
 all:
   hosts:
     target:
-      ansible_host: 10.3.255.73
+      ansible_host: 10.3.255.65
       #ansible_host: 192.168.1.32
       ansible_user: cableman
       #ansible_user: vlad
